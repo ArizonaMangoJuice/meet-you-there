@@ -3,14 +3,14 @@
 const express = require('express');
 const passport = require('passport');
 
-const Child = require('../models/child');
+const Post = require('../models/child');
 
 const router = express.Router();
 
 /* =================================================================================== */
 // ========== GET ALL CHILD ACCOUNTS FOR DEVELOPMENT ONLY ===================
 router.get('/', (req, res, next) => {
-  Child.find()
+  Post.find()
     .then(user => {
       res.json(user);
     })
@@ -21,7 +21,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/:id', (req, res, next) => {
-  Child.find({_id: req.params.id})
+  Post.find({_id: req.params.id})
     .then(user => {
       res.json(user);
     })
@@ -32,9 +32,28 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
+router.post('/', (req, res, next) => {
+  let { title, description, videoPath, userId } = req.body;
+  let newPost = {
+    title,
+    description,
+    videoPath,
+    userId
+  }
+  return Post.create(newPost)
+    .then(result => {
+      return res.status(201)
+        .location(`./api/child/${result.id}`)
+        .json(result)
+    })
+
+});
+
 
 /* ==================================================================================== */
 // PROTECTION FOR THE FOLLOWING ENDPOINTS
 router.use('/', passport.authenticate('jwt', {session: false, failWithError: true}));
+
+
 
 module.exports = router;

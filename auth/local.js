@@ -7,20 +7,20 @@ const User = require('../models/parent');
 const localStrategy = new LocalStrategy((username, password, done) => {
   let user;
   User.find({ username })
-    .populate({
-      path: 'child', 
-      model: 'Child', 
-      populate: [
-        {
-          path: 'tasks',
-          model: 'Tasks'
-        },        
-        {
-          path: 'rewards',
-          model: 'Rewards'
-        }        
-      ],      
-    })
+    // .populate({
+    //   path: 'child', 
+    //   model: 'Child', 
+    //   populate: [
+    //     {
+    //       path: 'tasks',
+    //       model: 'Tasks'
+    //     },        
+    //     {
+    //       path: 'rewards',
+    //       model: 'Rewards'
+    //     }        
+    //   ],      
+    // })
     .then(results => {
       user = results[0];
       if (!user) {

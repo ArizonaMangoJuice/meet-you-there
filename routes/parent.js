@@ -3,7 +3,7 @@
 const express = require('express');
 const passport = require('passport');
 
-const Parent = require('../models/parent');
+const User = require('../models/parent');
 const Child = require('../models/child');
 const Rewards = require('../models/rewards');
 const Tasks = require('../models/tasks');
@@ -39,16 +39,16 @@ router.post('/', (req, res, next) => {
   // Create new Parent in DB
   let { username, password, name, email, isParent } = req.body;
 
-  return Parent.hashPassword(password)
+  return User.hashPassword(password)
     .then(digest => {
       const newUser = {
         username,
         password: digest,
         name,
         email,
-        isParent: true
+        isPro: true
       };
-      return Parent.create(newUser);
+      return User.create(newUser);
     })
     .then(result => {
       return res.status(201)
@@ -64,24 +64,7 @@ router.post('/', (req, res, next) => {
 /* =================================================================================== */
 // ========= GET ALL USERS FOR DEVELOPMENT ONLY ====================
 router.get('/', (req, res, next) => {
-  Parent.find().populate([{
-    path: 'child',
-    model: 'Child',
-    populate: [
-      {
-        path: 'tasks',
-        model: 'Tasks'
-      },        
-      {
-        path: 'rewards',
-        model: 'Rewards'
-      }        
-    ],
-  },
-  {
-    path: 'rewards',
-    model: 'Rewards'
-  }])
+  User.find()
     .then(result => res.json(result));
 });
 
@@ -148,20 +131,20 @@ router.post('/child', (req, res, next) => {
 /* =================================================================================== */
 // DELETE A PARENT BY IDS
 router.delete('/', (req, res, next) => {
-  Parent.findById(req.user.id)
-    .then((result) => {
-      // find and remove all associated Tasks
-      return Tasks.find({ parentId: req.user.id }).remove();
-    })
-    .then(() => {
-      // find and remove all 
-      return Rewards.find({ parentId: req.user.id }).remove();
-    })
-    .then(() => {
-      return Child.find({ parentId: req.user.id }).remove();
-    })
-    .then(() => {
-      return Parent.find({ _id: req.user.id }).remove();
+  User.findById(req.user.id)
+    // .then((result) => {
+    //   // find and remove all associated Tasks
+    //   return Tasks.find({ parentId: req.user.id }).remove();
+    // })
+    // .then(() => {
+    //   // find and remove all 
+    //   // return Rewards.find({ parentId: req.user.id }).remove();
+    // })
+    // .then(() => {
+    //   return Child.find({ parentId: req.user.id }).remove();
+    // })
+    .then(() => { 
+      return User.find({ _id: req.user.id }).remove();
     })
     .then(() => {
       res.status(204).end();

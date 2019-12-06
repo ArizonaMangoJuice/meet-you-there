@@ -3,26 +3,26 @@
 const mongoose = require ('mongoose');
 const bcrypt = require('bcryptjs');
 
-const childSchema = mongoose.Schema({
+const postSchema = mongoose.Schema({
 
-  name: {type: String, required: true},
-  username: {type: String, required: true, unique: true},
-  password: {type: String, required: true},
-  parentId: {type: mongoose.Schema.ObjectId, ref: 'Parent', required: true},
-  totalPoints: {type: Number, required: true, default: 0},
-  currentPoints: {type: Number, required:true, default: 0},
-  tasks: [
-    {type: mongoose.Schema.ObjectId, ref: 'Tasks', required: true}
-  ],
-  rewards: [
-    {type: mongoose.Schema.ObjectId, ref: 'Rewards'}
-  ]
+  title: {type: String, required: true},
+  description: {type: String, required: true},
+  videoPath: {type: String, required: true},
+  userId: {type: mongoose.Schema.ObjectId, ref: 'Parent', required: true},
+  likes: {type: Number, default: 0},
+  dislikes: {type: Number, default: 0},
+  // tasks: [
+  //   {type: mongoose.Schema.ObjectId, ref: 'Tasks', required: true}
+  // ],
+  // rewards: [
+  //   {type: mongoose.Schema.ObjectId, ref: 'Rewards'}
+  // ]
   
     
   
 });
 
-childSchema.set('toObject', {
+postSchema.set('toObject', {
   transform: function (doc,ret) {
     ret.id = ret._id;
     delete ret._id;
@@ -31,12 +31,14 @@ childSchema.set('toObject', {
   }
 });
 
-childSchema.methods.validatePassword = function (password) {
+postSchema.methods.validatePassword = function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-childSchema.statics.hashPassword = function (password) {
+postSchema.statics.hashPassword = function (password) {
   return bcrypt.hash(password, 10);
 };
 
-module.exports = mongoose.model('Child', childSchema);
+module.exports = mongoose.model('Post', postSchema);
+
+// child schema

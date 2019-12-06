@@ -3,20 +3,15 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const parentSchema = mongoose.Schema({
-  name: { type: String, required: true },
+const userSchema = mongoose.Schema({
+  name: { type: String},
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  isParent: { type: Boolean, required: true },
-  child: [
-
-    { type: mongoose.Schema.ObjectId, ref: 'Child' }
-
-  ]
+  isPro: { type: Boolean, required: true },
 });
 
-parentSchema.set('toObject', {
+userSchema.set('toObject', {
   transform: function (doc, ret) {
     ret.id = ret._id;
     delete ret._id;
@@ -25,12 +20,12 @@ parentSchema.set('toObject', {
   }
 });
 
-parentSchema.methods.validatePassword = function (password) {
+userSchema.methods.validatePassword = function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-parentSchema.statics.hashPassword = function (password) {
+userSchema.statics.hashPassword = function (password) {
   return bcrypt.hash(password, 10);
 };
 
-module.exports = mongoose.model('Parent', parentSchema);
+module.exports = mongoose.model('User', userSchema);
