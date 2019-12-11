@@ -20,6 +20,7 @@ const tasksRouter = require('./routes/tasks');
 const rewardsRouter = require('./routes/rewards');
 const parentRouter = require('./routes/parent');
 const childRouter = require('./routes/child');
+const videoRouter = require('./routes/videoStream')
 // Express app
 const app = express();
 
@@ -47,6 +48,7 @@ passport.use(jwtStrategy);
 
 // Endpoints
 app.use('/api', authRouter);
+app.use('/api/video', videoRouter);
 app.use('/api/parent', parentRouter);
 app.use('/api/child', childRouter);
 app.use('/api/tasks', tasksRouter);

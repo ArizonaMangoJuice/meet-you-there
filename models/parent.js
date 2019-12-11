@@ -9,6 +9,7 @@ const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   isPro: { type: Boolean, required: true },
+  isBaneed: { type: Boolean, required: true}
 });
 
 userSchema.set('toObject', {

@@ -1,7 +1,7 @@
 'use strict'; 
 
 const mongoose = require ('mongoose');
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 
 const postSchema = mongoose.Schema({
 
@@ -11,6 +11,8 @@ const postSchema = mongoose.Schema({
   userId: {type: mongoose.Schema.ObjectId, ref: 'Parent', required: true},
   likes: {type: Number, default: 0},
   dislikes: {type: Number, default: 0},
+  flags: {type: Number, default: 0},
+  comments: {type: String, default: 0}
   // tasks: [
   //   {type: mongoose.Schema.ObjectId, ref: 'Tasks', required: true}
   // ],
@@ -31,13 +33,13 @@ postSchema.set('toObject', {
   }
 });
 
-postSchema.methods.validatePassword = function (password) {
-  return bcrypt.compare(password, this.password);
-};
+// postSchema.methods.validatePassword = function (password) {
+//   return bcrypt.compare(password, this.password);
+// };
 
-postSchema.statics.hashPassword = function (password) {
-  return bcrypt.hash(password, 10);
-};
+// postSchema.statics.hashPassword = function (password) {
+//   return bcrypt.hash(password, 10);
+// };
 
 module.exports = mongoose.model('Post', postSchema);
 
